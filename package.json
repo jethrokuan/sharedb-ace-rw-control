@@ -1,7 +1,7 @@
 {
   "name": "sharedb-ace-rw-control",
   "version": "0.0.1",
-  "description": "SharedbAce plugin for read-write control", 
+  "description": "SharedbAce plugin for read-write control",
   "repository": "https://github.com/jethrokuan/sharedb-ace-rw-control",
   "author": "Jethro Kuan",
   "license": "MIT",
@@ -38,5 +38,6 @@
     "webpack": "^1.14.0"
   },
   "dependencies": {
+    "mousetrap": "^1.6.0"
   }
 }

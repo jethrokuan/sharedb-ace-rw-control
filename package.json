@@ -1,0 +1,43 @@
+{
+  "name": "sharedb-ace-rw-control",
+  "version": "0.0.1",
+  "description": "SharedbAce plugin for read-write control",
+  "main": "./distribution/sharedb-ace.js",
+  "repository": "https://github.com/jethrokuan/sharedb-ace-rw-control",
+  "author": "Jethro Kuan",
+  "license": "MIT",
+  "scripts": {
+    "build:prod": "webpack --config webpack.prod.config.js",
+    "build:dev": "webpack --config webpack.dev.config.js",
+    "build:watch": "webpack --config webpack.dev.config.js --prepublish",
+    "watch": "yarn run build",
+    "test": "mocha --compilers js:babel-core/register",
+    "lint": "eslint source"
+  },
+  "precommit": {
+    "run": [
+      "lint"
+    ]
+  },
+  "devDependencies": {
+    "amd-loader": "^0.0.5",
+    "assert": "^1.4.1",
+    "babel-cli": "^6.18.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-latest": "^6.16.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "chai-json-equal": "^0.0.1",
+    "eslint": "^3.15.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.9.0",
+    "jsdom": "^9.10.0",
+    "mocha": "^3.2.0",
+    "pre-commit": "^1.2.2",
+    "webpack": "^1.14.0"
+  },
+  "dependencies": {
+  }
+}

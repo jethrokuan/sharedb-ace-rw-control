@@ -1,5 +1,5 @@
 function SharedbAceRWControl(socket, ace) {
-  socket.on('message', (message) => {
+  socket.addEventListener('message', (message) => {
     switch (message.data) {
     case "access-control:lecturer":
       doSomething();
@@ -8,8 +8,6 @@ function SharedbAceRWControl(socket, ace) {
       break;
     }
   });
-  
-  console.log(this.extensionSocket);
 }
 
 module.exports = SharedbAceRWControl;

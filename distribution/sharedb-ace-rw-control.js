@@ -56,8 +56,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	function SharedbAceRWControl() {
-	  console.log(this.extensionSocket);
+	function SharedbAceRWControl(socket, ace) {
+	  console.log(socket);
+	  socket.addEventListener('message', function (message) {
+	    switch (message.data) {
+	      case "access-control:lecturer":
+	        doSomething();
+	        break;
+	      default:
+	        break;
+	    }
+	  });
 	}
 
 	module.exports = SharedbAceRWControl;

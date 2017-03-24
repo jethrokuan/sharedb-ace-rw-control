@@ -1,38 +1,68 @@
-const Mousetrap = require('mousetrap');
-
-Mousetrap.prototype.stopCallback = function (e, element) {
-  return false;
-};
-
 function SharedbAceRWControl(socket, ace) {
-  let READ_ONLY = ace.getReadOnly();
-  const mode = prompt('You are a: lecturer (1), student (2)', 1);
-  if (mode === '1') {
-    Mousetrap.bind('ctrl+1', () => {
-      if (READ_ONLY) {
-        alert('making writable!');
-        READ_ONLY = false;
-        socket.send('access-control:setWritable');
-      } else {
-        alert('making read-only!');
-        READ_ONLY = true;
-        socket.send('access-control:setReadOnly');
-      }
-    });
-    socket.send('access-control:init-lecturer');
+  let READ_ONLY;
+  function toggleReadOnly() {
+    if (READ_ONLY) {
+      alert('making writable!');
+      READ_ONLY = false;
+      socket.send(JSON.stringify({
+        mode: 'access-control:setWritable',
+        aceId: ace.id,
+      }));
+    } else {
+      alert('making read-only!');
+      READ_ONLY = true;
+      socket.send(JSON.stringify({
+        mode: 'access-control:setReadOnly',
+        aceId: ace.id,
+      }));
+    } 
+  }
+  
+  const mode = prompt('You are a: lecturer (1), student (2)', 1) === '1' ? 'lecturer' : 'student';
+  const modeDisplay = document.createElement('span');
+    
+  if (mode === 'lecturer') {
+    var toggle = document.createElement('button'); 
+    toggle.style.cssText = 'position: absolute; top: 0; right: 0;';
+    toggle.innerHTML = 'toggle';
+    ace.container.appendChild(toggle);
+    toggle.addEventListener('click', toggleReadOnly);
+    socket.send(JSON.stringify({
+      mode: 'access-control:init-lecturer',
+      aceId: ace.id,
+    }));
   } else {
-    socket.send('access-control:init-student');
+    modeDisplay.innerHTML = 'LOADING';
+    modeDisplay.style.cssText = 'position: absolute; bottom: 0; right: 0';
+    ace.container.appendChild(modeDisplay);
+    socket.send(JSON.stringify({
+      mode: 'access-control:init-student',
+      aceId: ace.id,
+    }));
   }
 
   socket.addEventListener('message', (message) => {
     switch (message.data) {
-      case 'access-control:setReadOnly':
+    case 'access-control:setReadOnly':
+      READ_ONLY = true;
+      if (mode === 'student') {
         ace.setReadOnly(true);
-        break;
-      case 'access-control:setWritable':
+        modeDisplay.innerHTML = 'READ ONLY';
+      } else {
+        toggle.innerHTML= 'toggle writable';
+      }
+      break;
+    case 'access-control:setWritable':
+      READ_ONLY = false;
+      if (mode === 'student') {
         ace.setReadOnly(false);
-      default:
-        break;
+        modeDisplay.innerHTML = 'WRITABLE';
+      } else {
+        toggle.innerHTML = 'toggle read-only';
+      }
+      break;
+    default:
+      break;
     }
   });
 }

@@ -38,6 +38,6 @@
     "webpack": "^1.14.0"
   },
   "dependencies": {
-    "mousetrap": "^1.6.0"
+    "redis": "^2.7.1"
   }
 }

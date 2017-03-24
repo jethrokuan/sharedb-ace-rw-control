@@ -43,7 +43,6 @@ module.exports = function subscribe(redisUrl) {
         break;
       case 'access-control:init-student':
         rc.hget("access-control", msg.aceId, function(err, reply) {
-          console.log(reply);
           if (err) throw err;
           if (reply === null) {
             rc.hset(["access-control", msg.aceId, false], function(err, reply) {
@@ -59,8 +58,7 @@ module.exports = function subscribe(redisUrl) {
         }); 
         break;
       case 'access-control:setReadOnly':
-        pub.publish('access-control', 'setReadOnly');
-        console.log("here");
+        pub.publish('access-control', 'setReadOnly'); 
         const rc1 = redis.createClient(redisUrl);
         rc1.hset(["access-control", msg.aceId, true], function(err, reply) {
           if (err) throw err;

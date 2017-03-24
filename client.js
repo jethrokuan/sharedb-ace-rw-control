@@ -42,8 +42,7 @@ function SharedbAceRWControl(socket, ace) {
 
   socket.addEventListener('message', (message) => {
     switch (message.data) {
-    case 'access-control:setReadOnly':
-      console.log(mode);
+    case 'access-control:setReadOnly': 
       READ_ONLY = true;
       if (mode === 'student') {
         ace.setReadOnly(true);
@@ -52,8 +51,7 @@ function SharedbAceRWControl(socket, ace) {
         toggle.innerHTML= 'toggle writable';
       }
       break;
-    case 'access-control:setWritable':
-      console.log(mode);
+    case 'access-control:setWritable': 
       READ_ONLY = false;
       if (mode === 'student') {
         ace.setReadOnly(false);

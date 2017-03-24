@@ -22,18 +22,16 @@ module.exports = function subscribe(redisUrl) {
     
     ctx.websocket.on('message', (message) => {
       const msg = JSON.parse(message);
-      console.log(msg);
       switch (msg.mode) {
-      case 'access-control:init-lecturer': 
-        rc.hget("access-control", msg.aceId, function(err, reply) {
-          if (err) throw err;
-          console.log(reply);
-          if (reply === null) {
-            rc.hset(["access-control", msg.aceId, false], function(err, reply) {
+      case 'access-control:init-lecturer':
+        rc.hget("access-control", msg.aceId, function(err, readOnly) {
+          if (err) throw err; 
+          if (readOnly === null) {
+            rc.hset(["access-control", msg.aceId, false], function(err, readOnly) {
               if (err) throw err;
             });
             ctx.websocket.send('access-control:setWritable');
-          } else if (reply === "true"){
+          } else if (readOnly === true){
             ctx.websocket.send('access-control:setReadOnly');
           } else {
             ctx.websocket.send('access-control:setWritable');
@@ -41,26 +39,26 @@ module.exports = function subscribe(redisUrl) {
           rc.quit();
         });
         break;
-      case 'access-control:init-student':
-        rc.hget("access-control", msg.aceId, function(err, reply) {
+      case 'access-control:init-student': 
+        rc.hget("access-control", msg.aceId, function(err, readOnly) {
           if (err) throw err;
-          if (reply === null) {
-            rc.hset(["access-control", msg.aceId, false], function(err, reply) {
+          if (readOnly === null) {
+            rc.hset(["access-control", msg.aceId, false], function(err, readOnly) {
               if (err) throw err;
             });
             ctx.websocket.send('access-control:setWritable');
-          } else if (reply === "true") {
-            ctx.websocket.send('access-control.setReadOnly');
+          } else if (readOnly === true) {
+            ctx.websocket.send('access-control:setReadOnly');
           } else {
-            ctx.websocket.send('access-control.setWritable');
+            ctx.websocket.send('access-control:setWritable');
           }
           rc.quit();
-        }); 
+        });
         break;
       case 'access-control:setReadOnly':
-        pub.publish('access-control', 'setReadOnly'); 
+        pub.publish('access-control', 'setReadOnly');
         const rc1 = redis.createClient(redisUrl);
-        rc1.hset(["access-control", msg.aceId, true], function(err, reply) {
+        rc1.hset(["access-control", msg.aceId, true], function(err, readOnly) {
           if (err) throw err;
           rc1.quit();
         });
@@ -72,7 +70,7 @@ module.exports = function subscribe(redisUrl) {
           if (err) throw err;
           rc2.quit();
         });
-        break; 
+        break;
       default:
         break;
       }

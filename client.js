@@ -2,14 +2,12 @@ function SharedbAceRWControl(socket, ace) {
   let READ_ONLY;
   function toggleReadOnly() {
     if (READ_ONLY) {
-      alert('making writable!');
       READ_ONLY = false;
       socket.send(JSON.stringify({
         mode: 'access-control:setWritable',
         aceId: ace.id,
       }));
     } else {
-      alert('making read-only!');
       READ_ONLY = true;
       socket.send(JSON.stringify({
         mode: 'access-control:setReadOnly',
@@ -18,9 +16,10 @@ function SharedbAceRWControl(socket, ace) {
     } 
   }
   
-  const mode = prompt('You are a: lecturer (1), student (2)', 1) === '1' ? 'lecturer' : 'student';
+  const _mode = prompt('You are a: lecturer (1), student (2)', 1);
+  const mode = _mode === '1' ? 'lecturer' : 'student';
   const modeDisplay = document.createElement('span');
-    
+  
   if (mode === 'lecturer') {
     var toggle = document.createElement('button'); 
     toggle.style.cssText = 'position: absolute; top: 0; right: 0;';
@@ -44,6 +43,7 @@ function SharedbAceRWControl(socket, ace) {
   socket.addEventListener('message', (message) => {
     switch (message.data) {
     case 'access-control:setReadOnly':
+      console.log(mode);
       READ_ONLY = true;
       if (mode === 'student') {
         ace.setReadOnly(true);
@@ -53,6 +53,7 @@ function SharedbAceRWControl(socket, ace) {
       }
       break;
     case 'access-control:setWritable':
+      console.log(mode);
       READ_ONLY = false;
       if (mode === 'student') {
         ace.setReadOnly(false);

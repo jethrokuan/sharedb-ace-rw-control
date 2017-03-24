@@ -3,14 +3,14 @@ import redis from 'redis';
 function redisInitValueFactory(redisUrl) {
   return function init(ctx, aceId) {
     const rc = redis.createClient(redisUrl);
-    rc.hget("access-control", aceId, function(err, readOnly) {
+    rc.hget('access-control', aceId, function(err, readOnly) {
       if (err) throw err;
       if (readOnly === null) {
-        rc.hset(["access-control", aceId, false], function(err, readOnly) {
+        rc.hset(['access-control', aceId, false], function(err, readOnly) {
           if (err) throw err;
         });
         ctx.websocket.send('access-control:setWritable');
-      } else if (readOnly === true){
+      } else if (readOnly) {
         ctx.websocket.send('access-control:setReadOnly');
       } else {
         ctx.websocket.send('access-control:setWritable');
@@ -23,15 +23,15 @@ function redisInitValueFactory(redisUrl) {
 function redisSetValueFactory(redisUrl) {
   return function set(aceId, value) {
     let val;
-    if (value === "read-only") {
+    if (value === 'read-only') {
       val = true;
-    } else if (value === "read-write") {
+    } else if (value === 'read-write') {
       val = false;
     } else {
-      throw new Exception(`"Unhandled value type :${value}"`);
+      throw new Exception(`'Unhandled value type :${value}'`);
     }
     const rc = redis.createClient(redisUrl);
-    rc.hset(["access-control", aceId, val], function(err, readOnly) {
+    rc.hset(['access-control', aceId, val], function(err, readOnly) {
       if (err) throw err;
       rc.quit();
     });
@@ -70,11 +70,11 @@ module.exports = function subscribe(redisUrl) {
         init(ctx, msg.aceId);
         break;
       case 'access-control:setReadOnly':
-        set(msg.aceId, "read-only");
+        set(msg.aceId, 'read-only');
         pub.publish('access-control', 'setReadOnly'); 
         break;
       case 'access-control:setWritable':
-        set(msg.aceId, "read-write");
+        set(msg.aceId, 'read-write');
         pub.publish('access-control', 'setWritable'); 
         break;
       default:

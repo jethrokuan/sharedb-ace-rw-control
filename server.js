@@ -1,13 +1,18 @@
 import redis from 'redis';
 
+function Exception(msg) {
+  this.message = msg;
+  this.name = 'Exception';
+}
+
 function redisInitValueFactory(redisUrl) {
   return function init(ctx, aceId) {
     const rc = redis.createClient(redisUrl);
-    rc.hget('access-control', aceId, function(err, readOnly) {
+    rc.hget('access-control', aceId, (err, readOnly) => {
       if (err) throw err;
       if (readOnly === null) {
-        rc.hset(['access-control', aceId, false], function(err, readOnly) {
-          if (err) throw err;
+        rc.hset(['access-control', aceId, false], (err2, readOnly2) => {
+          if (err2) throw err;
         });
         ctx.websocket.send('access-control:setWritable');
       } else if (readOnly) {
@@ -31,7 +36,7 @@ function redisSetValueFactory(redisUrl) {
       throw new Exception(`'Unhandled value type :${value}'`);
     }
     const rc = redis.createClient(redisUrl);
-    rc.hset(['access-control', aceId, val], function(err, readOnly) {
+    rc.hset(['access-control', aceId, val], (err, readOnly) => {
       if (err) throw err;
       rc.quit();
     });
@@ -41,44 +46,44 @@ function redisSetValueFactory(redisUrl) {
 module.exports = function subscribe(redisUrl) {
   return (ctx) => {
     const pub = redis.createClient(redisUrl);
-    const sub = redis.createClient(redisUrl); 
+    const sub = redis.createClient(redisUrl);
 
     const init = redisInitValueFactory(redisUrl);
     const set = redisSetValueFactory(redisUrl);
-    
+
     sub.on('message', (channel, message) => {
-            if (channel === 'access-control') {
-              if (message  === 'setReadOnly') {
-                ctx.websocket.send('access-control:setReadOnly');
-              } else if (message === 'setWritable') {
-                ctx.websocket.send('access-control:setWritable');
-              } else {
-                console.warn(`unhandled message: ${message}`);
-              }
-            }
-          });
+      if (channel === 'access-control') {
+        if (message === 'setReadOnly') {
+          ctx.websocket.send('access-control:setReadOnly');
+        } else if (message === 'setWritable') {
+          ctx.websocket.send('access-control:setWritable');
+        } else {
+          throw new Exception(`unhandled message: ${message}`);
+        }
+      }
+    });
 
     sub.subscribe('access-control');
-    
+
     ctx.websocket.on('message', (message) => {
       const msg = JSON.parse(message);
       switch (msg.mode) {
-      case 'access-control:init-lecturer':
-        init(ctx, msg.aceId);
-        break;
-      case 'access-control:init-student':
-        init(ctx, msg.aceId);
-        break;
-      case 'access-control:setReadOnly':
-        set(msg.aceId, 'read-only');
-        pub.publish('access-control', 'setReadOnly'); 
-        break;
-      case 'access-control:setWritable':
-        set(msg.aceId, 'read-write');
-        pub.publish('access-control', 'setWritable'); 
-        break;
-      default:
-        break;
+        case 'access-control:init-lecturer':
+          init(ctx, msg.aceId);
+          break;
+        case 'access-control:init-student':
+          init(ctx, msg.aceId);
+          break;
+        case 'access-control:setReadOnly':
+          set(msg.aceId, 'read-only');
+          pub.publish('access-control', 'setReadOnly');
+          break;
+        case 'access-control:setWritable':
+          set(msg.aceId, 'read-write');
+          pub.publish('access-control', 'setWritable');
+          break;
+        default:
+          break;
       }
     });
 

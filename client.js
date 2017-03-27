@@ -1,3 +1,4 @@
+/* eslint-env browser */
 function SharedbAceRWControl(socket, ace) {
   let READ_ONLY;
   function toggleReadOnly() {
@@ -16,7 +17,7 @@ function SharedbAceRWControl(socket, ace) {
     }
   }
 
-  const $mode = prompt('You are a: lecturer (1), student (2)', 1);
+  const $mode = window.prompt('You are a: lecturer (1), student (2)', 1);
   const mode = $mode === '1' ? 'lecturer' : 'student';
   const modeDisplay = document.createElement('span');
   let toggle;

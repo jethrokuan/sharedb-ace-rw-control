@@ -1,6 +1,6 @@
 {
   "name": "sharedb-ace-rw-control",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "SharedbAce plugin for read-write control",
   "repository": "https://github.com/jethrokuan/sharedb-ace-rw-control",
   "author": "Jethro Kuan",

@@ -1,18 +1,15 @@
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = {
-  entry: './source/sharedb-ace-rw-control.js',
+  entry: {
+    client: './client.js',
+  },
   output: {
-    library: "SharedbAceRWControl",
-    libraryTarget: "umd",
-    filename: "distribution/sharedb-ace-rw-control.min.js"
+    path: path.join(__dirname, 'dist'),
+    filename: "sharedb-ace-rw-control.[name].js"
   }, 
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production'),
-      } 
-    }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
@@ -26,4 +23,4 @@ module.exports = {
       loader: 'babel-loader'
     }]
   }
- }
+};

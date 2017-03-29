@@ -6,12 +6,9 @@
   "author": "Jethro Kuan",
   "license": "MIT",
   "scripts": {
-    "build:prod": "webpack --config webpack.prod.config.js",
-    "build:dev": "webpack --config webpack.dev.config.js",
-    "build:watch": "webpack --config webpack.dev.config.js --prepublish",
-    "watch": "yarn run build",
-    "test": "mocha --compilers js:babel-core/register",
-    "lint": "eslint source"
+    "bundle": "webpack",
+    "bundle:watch": "webpack --watch",
+    "lint": "eslint client.js server.js"
   },
   "precommit": {
     "run": [
@@ -19,25 +16,18 @@
     ]
   },
   "devDependencies": {
-    "amd-loader": "^0.0.5",
-    "assert": "^1.4.1",
     "babel-cli": "^6.18.0",
     "babel-loader": "^6.2.10",
     "babel-preset-latest": "^6.16.0",
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
-    "chai-json-equal": "^0.0.1",
     "eslint": "^3.15.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.9.0",
-    "jsdom": "^9.10.0",
-    "mocha": "^3.2.0",
-    "pre-commit": "^1.2.2",
     "webpack": "^1.14.0"
   },
   "dependencies": {
+    "pre-commit": "^1.2.2",
     "redis": "^2.7.1"
   }
 }

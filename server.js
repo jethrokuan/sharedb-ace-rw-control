@@ -8,10 +8,14 @@ function Exception(msg) {
 function redisInitValueFactory(redisUrl) {
   return function init(ctx, aceId) {
     const rc = redis.createClient(redisUrl);
+    /* eslint-disable no-unused-vars */
     rc.hget('access-control', aceId, (err, readOnly) => {
+      /* eslint-enable no-unused-vars */
       if (err) throw err;
       if (readOnly === null) {
+        /* eslint-disable no-unused-vars */
         rc.hset(['access-control', aceId, false], (err2, readOnly2) => {
+          /* eslint-enable no-unused-vars */
           if (err2) throw err;
         });
         ctx.websocket.send('access-control:setWritable');
@@ -36,7 +40,9 @@ function redisSetValueFactory(redisUrl) {
       throw new Exception(`'Unhandled value type :${value}'`);
     }
     const rc = redis.createClient(redisUrl);
+    /* eslint-disable no-unused-vars */
     rc.hset(['access-control', aceId, val], (err, readOnly) => {
+      /* eslint-enable no-unused-vars */
       if (err) throw err;
       rc.quit();
     });
@@ -88,7 +94,9 @@ module.exports = function subscribe(redisUrl) {
     });
 
     // TODO: handle reconnects
+    /* eslint-disable no-unused-vars */
     ctx.websocket.on('close', (event) => {
+      /* eslint-enable no-unused-vars */
       sub.unsubscribe();
       sub.quit();
       pub.quit();

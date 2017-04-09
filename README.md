@@ -20,8 +20,8 @@ router.get('/ws', async (ctx) => {
 ```
 
 ### Client
-1. Use 
-```
+1. Using =node=
+```js
 import SharedbAceRWControl from "sharedb-ace-rw-control/client";
 const editor = ace.edit("editor"); 
 const ShareAce = new sharedbAce(id, { ... });

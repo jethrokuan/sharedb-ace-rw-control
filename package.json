@@ -1,15 +1,22 @@
 {
   "name": "sharedb-ace-rw-control",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "SharedbAce plugin for read-write control",
   "repository": "https://github.com/jethrokuan/sharedb-ace-rw-control",
   "author": "Jethro Kuan",
   "license": "MIT",
-  "files": [ "dist", "client.js", "server.js" ],
+  "files": [
+    "dist",
+    "distribution"
+  ],
   "scripts": {
-    "bundle": "webpack",
-    "bundle:watch": "webpack --watch",
-    "lint": "eslint client.js server.js"
+    "build": "npm run build:npm && npm run build:dist",
+    "build:npm": "babel source --presets babel-preset-latest --out-dir distribution",
+    "build:dist": "webpack",
+    "build:watch": "webpack --watch",
+    "test": "echo 'doing nothing'",
+    "lint": "eslint source",
+    "prepublish": "npm run build"
   },
   "precommit": {
     "run": [
@@ -29,6 +36,7 @@
     "webpack": "^1.14.0"
   },
   "dependencies": {
+    "babel": "^6.23.0",
     "redis": "^2.7.1"
   }
 }

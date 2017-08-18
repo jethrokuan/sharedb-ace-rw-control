@@ -3,7 +3,7 @@ var path = require('path');
 
 module.exports = {
   entry: {
-    client: './client.js',
+    client: './source/client.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),

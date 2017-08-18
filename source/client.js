@@ -89,4 +89,4 @@ function SharedbAceRWControl(socket, ace) {
   });
 }
 
-module.exports = SharedbAceRWControl;
+export default SharedbAceRWControl;
